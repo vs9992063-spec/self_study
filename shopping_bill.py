@@ -38,9 +38,14 @@ def discount(total: float | int | str | Decimal) -> float:
     return _round_currency(amount * rate)
 
 
+def final_bill(items: Iterable[float | int | str | Decimal]) -> float:
+    """Calculate final payable amount after applying discount to subtotal."""
+    sub_dec = _to_decimal(subtotal(items))
+    disc_dec = _to_decimal(discount(sub_dec))
+    return _round_currency(sub_dec - disc_dec)
+
+
 if __name__ == "__main__":
     cart_items = [450.00, 350.00, 250.00]
-    sub = subtotal(cart_items)
-    disc = discount(sub)
-    print(f"Subtotal: {sub:.2f}")
-    print(f"Discount: {disc:.2f}")
+    payable = final_bill(cart_items)
+    print(f"Final Shopping Bill: {payable:.2f}")
